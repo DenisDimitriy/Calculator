@@ -1,3 +1,45 @@
+var item1 = new Item();
+var item2 = new Item();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 //Подключить main
 var mainElement = document.getElementById("main");
 
@@ -53,3 +95,4 @@ item.element.result.onchange = function (e) {
     item.quantity = item.result / item.price;
     item.render();
 }
+*/
