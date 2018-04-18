@@ -30,6 +30,7 @@ function createItemElement(item, list) {
     itemElement.className = "item";
     
     var name = document.createElement("input");
+    name.style.width = "400px";
     name.value = item.name;
     name.className = "name";
     name.onchange = function (e) {
@@ -37,6 +38,7 @@ function createItemElement(item, list) {
     }
 
     var price = document.createElement("input");
+    price.style.width = "50px";
     price.value = item.price;
     price.className = "price";
     price.onchange = function (e) {
@@ -46,6 +48,7 @@ function createItemElement(item, list) {
     }
     
     var quantity = document.createElement("input");
+    quantity.style.width = "50px";
     quantity.value = item.quantity;
     quantity.className = "quantity";
     quantity.onchange = function (e) {
@@ -55,6 +58,7 @@ function createItemElement(item, list) {
     }
     
     var result = document.createElement("input");
+    result.style.width = "50px";
     result.value = item.result;
     result.className = "result";
     result.onchange = function (e) {
@@ -73,6 +77,7 @@ function createItemElement(item, list) {
     }
 
     var categories = document.createElement("input");
+    categories.style.width = "400px";
     categories.value = item.categories.join(", ");
     categories.className = "categories";
     categories.onchange = function (e) {
@@ -81,11 +86,11 @@ function createItemElement(item, list) {
     }
 
     itemElement.appendChild(name);
-    itemElement.appendChild(categories);
     itemElement.appendChild(price);
     itemElement.appendChild(quantity);
     itemElement.appendChild(result);
     itemElement.appendChild(remove);
+    itemElement.appendChild(categories);
 
     return itemElement;
 }
@@ -134,41 +139,92 @@ function createCalculatorElement (calculator, list, calculateBtn, results) {
 }
 
 /** Проверить соответствие массивов категорий */
-function matchingCategory (ruleArray, itemArray) {
+function matchingCategory (ruleCategory, itemCategory) {
     var matches = 0;
-    for (var i=0; i<ruleArray.length; i++){
-        for(var j=0; j<itemArray.length; j++){
-            if (ruleArray[i] == itemArray[j]){
+    for (var i=0; i<ruleCategory.length; i++){
+        for(var j=0; j<itemCategory.length; j++){
+            if (ruleCategory[i] == itemCategory[j]){
                 matches++;
                 break;
             }
         }
     }
-    if (matches == ruleArray.length) return true
+    if (matches == ruleCategory.length) return true
 }
 
-/** Создать элемент шаблона */
-function createPatternElement (pattern, list, baseListElement) {
+/** Создать элемент базовой позиции */
+function createBaseItemElement (baseItem, list, baseElement) {
 
-    var patternElement = document.createElement("div");
+    var baseItemElement = document.createElement("div");
 
-    var nameElement = document.createElement("span");
-    nameElement.innerHTML = pattern.name;
+    var nameElement = document.createElement("div");
+    nameElement.style.display = "inline-block";
+    nameElement.style.width = "600px";
+    nameElement.style.margin = "0 20px";
+    nameElement.innerHTML = baseItem.name;
 
     var priceElement = document.createElement("span");
-    priceElement.innerHTML = pattern.price;
+    priceElement.innerHTML = baseItem.price;
 
     var addItemBtn = document.createElement("button");
     addItemBtn.innerHTML = "Добавить";
     addItemBtn.onclick = function () {
-        var item = new Item(pattern.name, pattern.price, pattern.categories);
+        var item = new Item(baseItem.name, baseItem.price, baseItem.categories);
         list.push(item);
-        setListElement.appendChild(createItemElement(item, list));
+        listElement.appendChild(createItemElement(item, list));
     }
 
-    patternElement.appendChild(addItemBtn);
-    patternElement.appendChild(nameElement);
-    patternElement.appendChild(priceElement);
+    baseItemElement.appendChild(addItemBtn);
+    baseItemElement.appendChild(nameElement);
+    baseItemElement.appendChild(priceElement);
 
-    baseListElement.appendChild(patternElement);
+    baseElement.appendChild(baseItemElement);
+}
+
+function renderBaseElement (baseElement, base, list) {
+    baseElement.innerHTML = "";
+    for (var i=0; i<base.length; i++){
+        var baseItem = base[i];
+        createBaseItemElement (baseItem, list, baseElement);
+    }
+}
+
+
+/** Создать селект базы */
+function createSelectElement(optionArray, categorySelected, baseOriginal,  baseFiltered, baseElement, list) {
+    var selectElement = document.createElement("select");
+    for (var i=0; i<optionArray.length; i++){
+        var optionElement = document.createElement("option");
+        optionElement.innerHTML = optionArray[i];
+        selectElement.appendChild(optionElement);
+    }
+    
+    console.log(baseOriginal);
+    console.log(baseFiltered);
+    categorySelected = selectElement.options[selectElement.selectedIndex].value;
+    var ruleCategories = [];
+    ruleCategories.push(categorySelected);
+    baseFiltered = filterBase (baseOriginal, ruleCategories);
+    renderBaseElement(baseElement, baseFiltered, list)
+
+    selectElement.onchange = function (e) {
+        categorySelected = selectElement.options[selectElement.selectedIndex].value;
+        var ruleCategories = [];
+        ruleCategories.push(categorySelected);
+        baseFiltered = filterBase (baseOriginal, ruleCategories);
+        renderBaseElement(baseElement, baseFiltered, list);
+        console.log(baseOriginal);
+        console.log(baseFiltered);
+    }
+    return selectElement;
+}
+
+function filterBase (baseOriginal, ruleCategories) {
+    var baseFiltered = [];
+    for (var i=0; i<baseOriginal.length; i++){
+        if (matchingCategory(ruleCategories, baseOriginal[i].categories)){
+            baseFiltered.push(baseOriginal[i]);
+        }
+    }
+    return baseFiltered;
 }

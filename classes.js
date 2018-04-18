@@ -5,13 +5,13 @@ function Item(name, price, categories) {
   this.price = price || 0;
   this.quantity = 0;
   this.result = 0;
-  this.categories = categories || ["все", "материалы"];
+  this.categories = categories || ["всі", "тмц"];
 }
 
 /** КАЛЬКУЛЯТОР */
 // Конструктор
 function Сalculator(categories) {
-  this.categories = categories || ["все", "материалы"];
+  this.categories = categories || ["всі", "тмц"];
   this.result = 0;
 }
 
