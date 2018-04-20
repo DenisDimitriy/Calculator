@@ -49,44 +49,31 @@ baseNavElement.appendChild(selectElement2);
 
 /** Секция набора позиций */
 
-
+// Кнопка "Добавить пустую позицию"
 addItemBtn.onclick = function() {
     var item = new Item();
     list.push(item);
     listElement.appendChild(createItemElement(item, list));
 }
 
-/*
-// Примеры
-var item = new Item("кабель", 5, ["все", "материалы", "магистраль"]);
-list.push(item);
-listElement.appendChild(createItemElement(item, list));
 
-item = new Item("патчкорд", 10, ["все", "материалы", "шкаф"]);
-list.push(item);
-listElement.appendChild(createItemElement(item, list));
+/** Секция результатов расчета */
 
-item = new Item("сплиттер", 15, ["все", "оборудование", "шкаф"]);
-list.push(item);
-listElement.appendChild(createItemElement(item, list));
-*/
-
-// Секция результатов расчета
-
+// Кнопка "Добавить расчет"
 addCalculatorBtn.onclick = function() {
     var calculator = new Сalculator ();
     result.push(calculator);
     resultElement.appendChild(createCalculatorElement (calculator, list, calculateBtn, result))
 }
 
-// Пример
+// Пример: расчет всех позиций (сумма всех позиций с категорией "все")
 var calculator = new Сalculator (["всі"])
 result.push(calculator);
 resultElement.appendChild(createCalculatorElement (calculator, list, calculateBtn, result))
 
 
 
-
+//Функция экспорта в эксель
 function exportData() {
     var dataToExcele = list.concat(result);
     alasql("SELECT * INTO XLSX('calculator.xlsx',{headers:true}) FROM ? ",[dataToExcele]);
