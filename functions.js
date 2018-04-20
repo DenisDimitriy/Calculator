@@ -191,7 +191,7 @@ function renderBaseElement (baseElement, base, list) {
 
 
 /** Создать селект базы */
-function createSelectElement(optionArray, categorySelected, baseOriginal,  baseFiltered, baseElement, list) {
+function createSelectElement(optionArray, filter, baseOriginal, baseFiltered, baseElement, list, idSelect) {
     var selectElement = document.createElement("select");
     for (var i=0; i<optionArray.length; i++){
         var optionElement = document.createElement("option");
@@ -201,17 +201,13 @@ function createSelectElement(optionArray, categorySelected, baseOriginal,  baseF
     
     console.log(baseOriginal);
     console.log(baseFiltered);
-    categorySelected = selectElement.options[selectElement.selectedIndex].value;
-    var ruleCategories = [];
-    ruleCategories.push(categorySelected);
-    baseFiltered = filterBase (baseOriginal, ruleCategories);
+    filter[idSelect] = (selectElement.options[selectElement.selectedIndex].value);
+    baseFiltered = filterBase (baseOriginal, filter);
     renderBaseElement(baseElement, baseFiltered, list)
 
     selectElement.onchange = function (e) {
-        categorySelected = selectElement.options[selectElement.selectedIndex].value;
-        var ruleCategories = [];
-        ruleCategories.push(categorySelected);
-        baseFiltered = filterBase (baseOriginal, ruleCategories);
+        filter[idSelect] = (selectElement.options[selectElement.selectedIndex].value);
+        baseFiltered = filterBase (baseOriginal, filter);
         renderBaseElement(baseElement, baseFiltered, list);
         console.log(baseOriginal);
         console.log(baseFiltered);
@@ -219,10 +215,10 @@ function createSelectElement(optionArray, categorySelected, baseOriginal,  baseF
     return selectElement;
 }
 
-function filterBase (baseOriginal, ruleCategories) {
+function filterBase (baseOriginal, filter) {
     var baseFiltered = [];
     for (var i=0; i<baseOriginal.length; i++){
-        if (matchingCategory(ruleCategories, baseOriginal[i].categories)){
+        if (matchingCategory(filter, baseOriginal[i].categories)){
             baseFiltered.push(baseOriginal[i]);
         }
     }

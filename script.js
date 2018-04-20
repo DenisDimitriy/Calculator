@@ -1,9 +1,5 @@
-/**Program
- * создать структуру данных (набор позиций с данными)
- * на ее основе создать DOM, описав необходимые обработчики событий для управления структурой данных
- */
 
-// Инициализация DOM элементов
+/** Инициализация DOM элементов */
 var baseNavElement = document.getElementById("base-nav-element");
 var baseElement = document.getElementById("base-element");
 var listElement = document.getElementById("list-element");
@@ -13,25 +9,47 @@ var addCalculatorBtn = document.getElementById("add-calculator-btn");
 var calculateBtn = document.getElementById("calculate-btn");
 
 
+/** Глобальные данные */
 
 var list = [];
 
 var result = [];
 
-var categorySelected;
+var filter = [];
 
 var baseFiltered = [];
 
-// Секция базы позиций
+
+/** Секция базы позиций */
+
+// Первый селект
+var selectElement1 = createSelectElement(
+    ["всі", "тмц", "бмр"],
+    filter,
+    base,
+    baseFiltered,
+    baseElement,
+    list,
+    0
+);
+baseNavElement.appendChild(selectElement1);
+
+// Второй селект
+var selectElement2 = createSelectElement(
+    ["всі", "магістрально-розподільчий сегмент", "абонентський сегмент"],
+    filter,
+    base,
+    baseFiltered,
+    baseElement,
+    list,
+    1
+)
+baseNavElement.appendChild(selectElement2);
 
 
-baseNavElement.appendChild(createSelectElement(["всі", "тмц", "бмр"], categorySelected, base, baseFiltered, baseElement, list))
+/** Секция набора позиций */
 
 
-//renderBaseElement (baseElement, base, list)
-
-
-// Секция набора позиций
 addItemBtn.onclick = function() {
     var item = new Item();
     list.push(item);
@@ -65,3 +83,11 @@ addCalculatorBtn.onclick = function() {
 var calculator = new Сalculator (["всі"])
 result.push(calculator);
 resultElement.appendChild(createCalculatorElement (calculator, list, calculateBtn, result))
+
+
+
+
+function exportData() {
+    var dataToExcele = list.concat(result);
+    alasql("SELECT * INTO XLSX('calculator.xlsx',{headers:true}) FROM ? ",[dataToExcele]);
+}
